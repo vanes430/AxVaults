@@ -39,4 +39,21 @@ public class ThreadUtils {
             Scheduler.get().run(runnable);
         }
     }
+
+    public static void runSync(org.bukkit.entity.Entity entity, Runnable runnable) {
+        if (entity == null || AxVaults.isStopping()) {
+            runnable.run();
+            return;
+        }
+
+        if (Scheduler.get().getClass().getSimpleName().contains("Folia")) {
+            Scheduler.get().execute(entity, runnable, null, 0L);
+        } else {
+            if (Scheduler.get().isGlobalTickThread()) {
+                runnable.run();
+            } else {
+                Scheduler.get().run(runnable);
+            }
+        }
+    }
 }
